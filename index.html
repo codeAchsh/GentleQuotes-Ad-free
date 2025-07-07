@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="images/icon.ico" />
+    <link rel="stylesheet" href="assets/css/style.css">
+    <title>やさしいひとこと</title>
+    <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=LXGW+Marker+Gothic&family=Yomogi&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&display=swap" rel="stylesheet">
+    
+  </head>
+  <body>
+    <h1 class="title">ことばのしおり</h1>
+    <div class="container">
+      <div id="quoteBox" class="quote">今日のひとことを読み込んでいます...</div>
+      <div class="buttons">
+        <button class="button-1 button-text"  onclick="showQuote('癒し')">癒されたい</button>
+        <button class="button-2 button-text"  onclick="showQuote('元気')">元気を出そう</button>
+        <button class="button-3 button-text" onclick="showQuote()">そのままでいいよ</button>
+      </div>
+    </div> 
+    <footer>
+      <div class="ad-template-link">
+        <p>🧁 作品紹介リンク</p>
+        <div>
+          <a href="https://codeachsh.github.io/All-template-Japanese-/" target="_blank">
+            📦 便利なテンプレート一覧はこちら！
+          </a>
+        </div>
+        <div>
+          <a href="https://note.com/chill_2525" target="_blank" class="note-link">
+            ✨ブログやテンプレート、成長の記録をまとめて公開中 → note.com/chill_2525
+          </a>
+        </div>
+      </div>
+        <!-- 🧃 広告ブロック -->
+      <div class="ad-area">
+        <p>スポンサーリンク</p>
+        <img src="images/sample-ad.jpg" alt="広告" width="100%" style="max-width:320px; margin: 0 auto; display:block;">
+      </div>
+
+    </footer>
+
+      <script>
+        let allQuotes = [];
+
+        // CSVの読み込み
+        fetch('quotes.csv')
+          .then(response => response.text())
+          .then(csv => {
+            const results = Papa.parse(csv, { header: true });
+            allQuotes = results.data;
+            showQuote(); // 初期表示
+          });
+
+        // フレーズの表示処理（背景画像なし）
+        function showQuote(selectedTag = null) {
+          if (allQuotes.length === 0) return;
+
+          // タグによるフィルタリング
+          const filtered = selectedTag
+            ? allQuotes.filter(q => q.tag && q.tag.trim() === selectedTag)
+            : allQuotes;
+
+          if (filtered.length === 0) return;
+
+          // ランダムにひとことを選択
+          const chosen = filtered[Math.floor(Math.random() * filtered.length)];
+
+          // テキスト表示
+          document.getElementById("quoteBox").textContent = chosen.text;
+
+          // 🎨 背景色のみ設定（画像は使わない）
+          document.body.style.backgroundImage = "none";
+          document.body.style.backgroundColor = chosen.color?.trim() || "#fef6f0";
+
+          // ログで確認（任意）
+          console.log("表示中:", chosen.text);
+          console.log("背景色:", chosen.color);
+        }
+      </script>
+  </body>
+</html>
